@@ -1,5 +1,12 @@
+import Link from "next/link"
+
 const HomePage = () => {
-  return <h1>teste</h1>;
+  return (
+    <Link href={`http://localhost:3000/fsw-donalds`}>
+      TESTE
+    </Link>
+  )
+
 };
 
 export default HomePage;
