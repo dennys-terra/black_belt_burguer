@@ -3,28 +3,34 @@
 import { Prisma  } from "@prisma/client";
 import { ChefHatIcon, ChevronsLeftIcon, ChevronsRightIcon} from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
+import { CartContext } from "../../context/cart";
+import CartSheet from "./CartSheet";
 
 type DetailProductInfoProps = {
     product: Prisma.ProductGetPayload<{include: {restaurant: {select: {name: true, avatarImageUrl: true}}}}> 
 }
 
 const DetailsProduct = ({product} : DetailProductInfoProps) => {
+    const {  toogleCart } = useContext(CartContext)
     const [quantity, setQuantity] = useState<number>(1)
     const handleDecreaseQuantity = () => {
         setQuantity((prev) => {
            return quantity >= 1 ? prev -1 : prev
         })
     }
-
-    const hadleIncreaseQuantity = () => setQuantity((prev) => prev + 1 )
     
+    const hadleIncreaseQuantity = () => setQuantity((prev) => prev + 1 )
 
+    const handleAddToCart = () => toogleCart()
+    
     return ( 
-       <div className="relative z-50 mt-[-1.5rem] rounded-t-3xl p-5 flex flex-auto flex-col overflow-hidden">
+       <>
+        <div className="relative z-50 mt-[-1.5rem] rounded-t-3xl p-5 flex flex-auto flex-col overflow-hidden">
             {/* RESTAURANTE */}
             <div className="flex-auto overflow-hidden">
                 <div className="flex items-center gap-1 px-5">
@@ -41,7 +47,7 @@ const DetailsProduct = ({product} : DetailProductInfoProps) => {
                         <ChevronsLeftIcon />
                     </Button>
                     <p className="w-4">{quantity}</p>
-                     <Button onClick={hadleIncreaseQuantity} variant={"destructive"} className="h-8 w-8 rounded-xl">
+                     <Button  onClick={hadleIncreaseQuantity} variant={"destructive"} className="h-8 w-8 rounded-xl">
                         <ChevronsRightIcon />
                     </Button>
                 </div>
@@ -68,8 +74,10 @@ const DetailsProduct = ({product} : DetailProductInfoProps) => {
             </div>
             </ScrollArea>
             </div>
-                <Button variant='default' className="rounded-full  w-full" >Adicionar à sacola</Button>
+                <Button onClick={handleAddToCart} disabled={quantity===0} variant={quantity === 0 ? 'ghost' : 'default'} className={`rounded-full  w-full font-bold ${quantity === 0 ? 'line-through ' : 'font-extrabold'}`}>Adicionar à sacola</Button>
        </div>
+             <CartSheet/>
+       </>
      );
 }
  
