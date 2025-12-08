@@ -16,7 +16,7 @@ type DetailProductInfoProps = {
 }
 
 const DetailsProduct = ({product} : DetailProductInfoProps) => {
-    const {  toogleCart } = useContext(CartContext)
+    const {  toogleCart, addProduct } = useContext(CartContext)
     const [quantity, setQuantity] = useState<number>(1)
     const handleDecreaseQuantity = () => {
         setQuantity((prev) => {
@@ -26,7 +26,13 @@ const DetailsProduct = ({product} : DetailProductInfoProps) => {
     
     const hadleIncreaseQuantity = () => setQuantity((prev) => prev + 1 )
 
-    const handleAddToCart = () => toogleCart()
+    const handleAddToCart = () => {
+        addProduct({
+            ...product,
+             quantity: quantity
+        })
+        toogleCart()
+    } 
     
     return ( 
        <>
