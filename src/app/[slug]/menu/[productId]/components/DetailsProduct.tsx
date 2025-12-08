@@ -41,7 +41,7 @@ const DetailsProduct = ({product} : DetailProductInfoProps) => {
             <h2 className=" mt-1 text-xl font-semibold">{product.name}</h2>
             
             <div className="flex items-center justify-between mt-3">
-                <h3 className="text-xl font-semibold">{new Intl.NumberFormat("pt-Br", { style:'currency', currency: 'BRL'}).format(product.price)}</h3>
+                <h3 className="text-xl font-semibold">{new Intl.NumberFormat("pt-Br", { style:'currency', currency: 'BRL'}).format(product.price * quantity )}</h3>
                 <div className="flex items-center gap-3 text-center">
                     <Button onClick={handleDecreaseQuantity} variant={"outline"} className="h-8 w-8 rounded-xl">
                         <ChevronsLeftIcon />
