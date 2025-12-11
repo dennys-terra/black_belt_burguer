@@ -18,6 +18,8 @@ type DetailProductInfoProps = {
 const DetailsProduct = ({product} : DetailProductInfoProps) => {
     const {  toogleCart, addProduct } = useContext(CartContext)
     const [quantity, setQuantity] = useState<number>(1)
+    
+    
     const handleDecreaseQuantity = () => {
         setQuantity((prev) => {
            return quantity >= 1 ? prev -1 : prev
