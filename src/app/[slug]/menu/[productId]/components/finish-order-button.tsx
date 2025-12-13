@@ -41,6 +41,10 @@ const formSchema = z.object({
     .refine((value) => isValidCpf(value), {
       message: "CPF inválido.",
     }),
+  phone: z
+    .string()
+    .min(11, "Número inválido")
+    .regex(/^\d+$/, "Digite apenas números"),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -56,6 +60,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
     defaultValues: {
       name: "",
       cpf: "",
+      phone: "",
     },
     shouldUnregister: true,
   });
@@ -84,10 +89,33 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
                     <FormControl>
                       <Input placeholder="Digite seu nome..." {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-center" />
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Seu celular</FormLabel>
+                    <FormControl>
+                      <PatternFormat
+                        format="(##) #####-####"
+                        placeholder="(24) 99999-9999"
+                        customInput={Input}
+                        value={field.value}
+                        onValueChange={(values) => {
+                          field.onChange(values.value); // 🔥 SOMENTE NÚMEROS
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-center" />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="cpf"
@@ -102,7 +130,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-center" />
                   </FormItem>
                 )}
               />
