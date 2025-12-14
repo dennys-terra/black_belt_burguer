@@ -86,6 +86,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
         products: products,
         slug: slug,
       });
+      onOpenChange(false);
     } catch (error) {
       console.error(error);
       console.log(ConsumptionMethod);
