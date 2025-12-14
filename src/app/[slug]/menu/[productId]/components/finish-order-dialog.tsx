@@ -1,6 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ConsumptionMethod } from "@prisma/client";
+import { useParams, useSearchParams } from "next/navigation";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import { z } from "zod";
@@ -26,6 +29,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+import { createOrder } from "../../actions/create-order";
+import { CartContext } from "../../context/cart";
 import { isValidCpf } from "../../helpers/cpf";
 
 const formSchema = z.object({
@@ -55,6 +60,9 @@ interface FinishOrderDialogProps {
 }
 
 const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
+  const searchParams = useSearchParams();
+  const { products } = useContext(CartContext);
+  const { slug } = useParams<{ slug: string }>();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,9 +72,26 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
     },
     shouldUnregister: true,
   });
-  const onSubmit = (data: FormSchema) => {
+  const onSubmit = async (data: FormSchema) => {
     console.log({ data });
+    try {
+      const consumptionMethod = searchParams.get(
+        "ConsumptionMethod",
+      ) as ConsumptionMethod;
+      await createOrder({
+        consumptionMethod: consumptionMethod,
+        customerName: data.name,
+        customerPhone: data.phone,
+        customerCpf: data.cpf,
+        products: products,
+        slug: slug,
+      });
+    } catch (error) {
+      console.error(error);
+      console.log(ConsumptionMethod);
+    }
   };
+
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerTrigger asChild></DrawerTrigger>
