@@ -31,7 +31,17 @@ interface OrdersProps {
         if(status === "PENDING") return 'Pendente'
     }
 
+    const defineColorByStatusOrder = (status: OrderStatus) => {
+  if (status === OrderStatus.PENDING) return "bg-red-600"
+  if (status === OrderStatus.IN_PREPARATION) return "bg-yellow-400"
+  if (status === OrderStatus.FINISHED) return "bg-green-600"
+
+  return "bg-gray-500 text-gray-900"
+}
+
+
 const Orders = ({orders} : OrdersProps) => {
+    
     return ( 
         <div className="space-y-6 p-6">
             <Button size='icon' variant="secondary" className="rounded-full">
@@ -46,8 +56,9 @@ const Orders = ({orders} : OrdersProps) => {
             {orders.map(order => (
                 <Card key={order.id}>
                     <CardContent className="p-5 space-y-4">
-                        <div className={`text-white w-fit rounded-full px-2 py-1 text-xs font-semibold
-                            {${order.status === OrderStatus.FINISHED ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-500'}}
+                        <div className={` w-fit rounded-full px-2 py-1 text-xs text-gray-600
+                            ${defineColorByStatusOrder(order.status)}
+
                             `}>
                             {getStatusLabel(order.status)}
                         </div>
