@@ -1,4 +1,4 @@
-import {  Prisma } from "@prisma/client";
+import {  OrderStatus, Prisma } from "@prisma/client";
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 import Image from "next/image";
 
@@ -25,6 +25,12 @@ interface OrdersProps {
     }>>
 }
 
+    const getStatusLabel = (status: OrderStatus) => {
+        if(status === "FINISHED") return 'Finalizado'
+        if(status === "IN_PREPARATION") return 'Em preparo'
+        if(status === "PENDING") return 'Pendente'
+    }
+
 const Orders = ({orders} : OrdersProps) => {
     return ( 
         <div className="space-y-6 p-6">
@@ -40,8 +46,10 @@ const Orders = ({orders} : OrdersProps) => {
             {orders.map(order => (
                 <Card key={order.id}>
                     <CardContent className="p-5 space-y-4">
-                        <div className="bg-gray-500 w-fit rounded-full px-2 py-1 text-xs font-semibold">
-                            Em preparo
+                        <div className={`text-white w-fit rounded-full px-2 py-1 text-xs font-semibold
+                            {${order.status === OrderStatus.FINISHED ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-500'}}
+                            `}>
+                            {getStatusLabel(order.status)}
                         </div>
                         <div className="flex items-center gap-2">
                             <div className="relative h-5 w-5">
